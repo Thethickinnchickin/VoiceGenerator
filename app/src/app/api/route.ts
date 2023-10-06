@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { VoiceObject } from "../page";
-import { fileURLToPath } from "url";
+
 
 export async function GET() {
     // Fetch the generated voices from ElevenLabs API
     const response = await fetch("https://api.elevenlabs.io/v1/voices", {
         headers: {
-            accept: "application/json",
-            "xi-api-key": process.env.XI_API_KEY || "",
+          accept: "application/json",
+          "xi-api-key": process.env.XI_API_KEY || "",
         },
         method: "GET",
-    });
+      });
 
     const result = await response.json();
 
@@ -22,7 +22,7 @@ export async function GET() {
     return NextResponse.json({ body: arrayOfGeneratedVoices });
 }
 
-export async function POST(req: NextResponse) {
+export async function POST(req: NextRequest) {
     // Extract the text and voice id from the request body
     const request = await req.json();
 
@@ -34,12 +34,12 @@ export async function POST(req: NextResponse) {
         text: theText,
         model_id: "eleven_monolingual_v1",
         voice_settings: {
-            stability: 0.5,
-            similarity: 0.5,
-            style: 0,
-            use_speaker_boost: true,
+          stability: 0.5,
+          similarity_boost: 0.5,
+          style: 0,
+          use_speaker_boost: true,
         },
-    };
+      };
 
     // Send the POST request
     const response = await fetch(

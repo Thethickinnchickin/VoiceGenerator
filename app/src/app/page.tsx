@@ -15,7 +15,6 @@ export default function Home() {
   const [arrayOfVoices, setArrayOfVoices] = useState< Array<VoiceObject> | undefined>();
   const [theVoiceId, setTheVoiceId] = useState<string | undefined>();
   const [theAudio, setTheAudio] = useState<string | undefined>();
-
   useEffect(() => {
     getGeneratedVoices();
     console.log(arrayOfVoices);
@@ -35,31 +34,30 @@ export default function Home() {
   async function generateSpeech() {
     // Make sure we have some text and a selected voice to work with
     if (!theText || !theVoiceId) return;
-
+  
     // Set the loading indicator
     setIsLoading(true);
-
+  
     try {
       // Make the API call
       const response = await fetch("/api", {
         method: "POST",
         body: JSON.stringify({ text: theText, voiceId: theVoiceId }),
       });
-
+  
       if (response.ok) {
         console.log("Speech generated successfully");
-
+  
         // Get the response as a blob, and create an object url for the audio file
         const theResponse = await response.blob();
         setTheAudio(URL.createObjectURL(theResponse));
-        console.log(response)
       } else {
         console.error("Failed to generate speech");
       }
     } catch (error) {
       console.error("Error occurred during API call:", error);
     }
-
+  
     setIsLoading(false);
   }
 
